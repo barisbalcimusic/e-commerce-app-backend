@@ -3,7 +3,8 @@ import { hashPassword } from "../../utils/crypto.js";
 
 export const register = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { firstName, lastName, email, password } = req.body;
+
     const [user] = await pool.execute("SELECT * FROM USERS WHERE email = ?", [
       email,
     ]);
@@ -18,8 +19,8 @@ export const register = async (req, res, next) => {
       const hashedPassword = await hashPassword(password);
       // INSERT USER INTO DATABASE
       const [result] = await pool.execute(
-        `INSERT INTO users (email, password) VALUES (?, ?)`,
-        [email, hashedPassword]
+        `INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)`,
+        [firstName, lastName, email, hashedPassword]
       );
 
       if (result.affectedRows === 0) {
