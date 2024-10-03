@@ -4,12 +4,12 @@ import { hashPassword } from "../../utils/crypto.js";
 export const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const [users] = await pool.execute("SELECT * FROM USERS WHERE email = ?", [
+    const [user] = await pool.execute("SELECT * FROM USERS WHERE email = ?", [
       email,
     ]);
 
     // CHECK IF USER ALREADY EXISTS
-    if (users.length > 0) {
+    if (user.length > 0) {
       return res
         .status(400)
         .json({ message: `User with email ${email} already exists` });
