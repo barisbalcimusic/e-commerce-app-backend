@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
-import { userRouter } from "./routers/userRouter.js";
 import cors from "cors";
-import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import cookieParser from "cookie-parser";
+import { appRouter } from "./routers/appRouter.js";
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ROUTES
-app.use("/", userRouter);
+app.use("/", appRouter);
 app.use(errorMiddleware);
 
 // SERVER
