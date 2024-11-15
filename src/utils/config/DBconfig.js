@@ -24,6 +24,17 @@ export const pool = mysql.createPool({
   multipleStatements: true,
 });
 
+// TEST DATABASE CONNECTION
+const testDatabaseConnection = async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log("Connected to the database successfully!");
+    connection.release();
+  } catch (error) {
+    console.error("Failed to connect to the database:", error.message);
+  }
+};
+
 // INITIALIZE THE DATABASE
 const initializeDatabase = async () => {
   try {
@@ -108,4 +119,5 @@ const queryFunctions = async () => {
   await pool.end();
 };
 
-queryFunctions();
+// queryFunctions();
+testDatabaseConnection();
