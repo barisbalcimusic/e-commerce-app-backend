@@ -1,7 +1,7 @@
 import { pool } from "../../utils/config/DBconfig.js";
 
-export const getAllProducts = async (req, res, next) => {
-  const { id } = req.body;
+export const getSizesOfSingleProduct = async (req, res, next) => {
+  const { id } = req.params;
 
   if (!id) {
     return res.status(400).json({ message: "Product ID is required" });
