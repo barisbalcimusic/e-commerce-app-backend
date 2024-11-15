@@ -6,9 +6,7 @@ export const getDetailsOfProduct = async (req, res, next) => {
   console.log(detail, id);
 
   if (!detail || !id) {
-    return res
-      .status(400)
-      .json({ message: "Missing detail or id information" });
+    return res.status(400).json({ message: "Missing asd or id information" });
   }
 
   const allowedDetails = [
