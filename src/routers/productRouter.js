@@ -1,14 +1,14 @@
 import express from "express";
-import { getAllProducts } from "../controllers/products/getAllProducts.js";
 import { deleteAllProducts } from "../controllers/products/deleteAllProducts.js";
 import { getSingleProduct } from "../controllers/products/getSingleProduct.js";
 import { getDetailsOfProduct } from "../controllers/products/getDetailsOfProduct.js";
 import { getCollections } from "../controllers/products/getCollections.js";
+import { getFilteredProducts } from "../controllers/products/getFilteredProducts.js";
 
 export const productRouter = express.Router();
 
 // ALL PRODUCTS
-productRouter.route("/").get(getAllProducts).delete(deleteAllProducts);
+productRouter.route("/").get(getFilteredProducts).delete(deleteAllProducts);
 
 // SINGLE PRODUCT
 productRouter.route("/:id").get(getSingleProduct);
