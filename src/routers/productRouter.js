@@ -4,11 +4,15 @@ import { getSingleProduct } from "../controllers/products/getSingleProduct.js";
 import { getDetailsOfProduct } from "../controllers/products/getDetailsOfProduct.js";
 import { getCollections } from "../controllers/products/getCollections.js";
 import { getFilteredProducts } from "../controllers/products/getFilteredProducts.js";
+import { getFilters } from "../controllers/products/getFilters.js";
 
 export const productRouter = express.Router();
 
 // ALL PRODUCTS
 productRouter.route("/").get(getFilteredProducts).delete(deleteAllProducts);
+
+// FILTERS
+productRouter.route("/filters").get(getFilters);
 
 // SINGLE PRODUCT
 productRouter.route("/:id").get(getSingleProduct);
