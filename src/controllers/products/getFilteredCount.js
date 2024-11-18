@@ -1,4 +1,3 @@
-import { query } from "express";
 import { pool } from "../../utils/config/DBconfig.js";
 
 export const getFilteredCount = async (req, res, next) => {
@@ -36,10 +35,13 @@ export const getFilteredCount = async (req, res, next) => {
   //   queryParams.push(filters.size);
   // }
 
-  // if (filters.brand.length > 0) {
-  //   whereClause += " AND products.brand = ?";
-  //   queryParams.push(filters.brand);
-  // }
+  // FILTER BY BRAND
+  if (filters.brand && filters.brand.length > 0) {
+    whereClause += ` AND products.brand IN (${filters.brand
+      .map(() => "?")
+      .join(", ")})`;
+    queryParams.push(...filters.brand);
+  }
 
   // if (filters.discount === "Ja") {
   //   whereClause += " AND products.discountPercentage > 0";
