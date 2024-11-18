@@ -43,10 +43,12 @@ export const getFilteredCount = async (req, res, next) => {
     queryParams.push(...filters.brand);
   }
 
-  // if (filters.discount === "Ja") {
-  //   whereClause += " AND products.discountPercentage > 0";
-  //   queryParams.push(filters.discount);
-  // }
+  //! THIS SHOULD BE CHANGED AS BOOLEAN
+  // FILTER BY DISCOUNT
+  if (filters.discount && filters.discount === "Ja") {
+    whereClause += " AND products.discountPercentage > 0";
+    queryParams.push(filters.discount);
+  }
 
   try {
     const query = `

@@ -38,6 +38,6 @@ FROM (SELECT DISTINCT brand FROM products) AS distinct_brands
 UNION ALL
 
 SELECT 
-  'discounted' AS filterCategory,
+  'discount' AS filterCategory,
   JSON_ARRAY('Ja', 'Nein') AS filterOptions,
   'radio' AS inputType;
