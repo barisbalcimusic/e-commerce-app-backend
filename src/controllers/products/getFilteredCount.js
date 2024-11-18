@@ -30,10 +30,15 @@ export const getFilteredCount = async (req, res, next) => {
     queryParams.push(...filters.color);
   }
 
-  // if (filters.size.length > 0) {
-  //   whereClause += " AND products.size = ?";
-  //   queryParams.push(filters.size);
-  // }
+  // FILTER BY SIZE
+  let sizesJoin = "";
+  if (filters.size && filters.size.length > 0) {
+    sizesJoin = `LEFT JOIN sizes ON products.id = sizes.product_id`;
+    whereClause += ` AND sizes.size IN (${filters.size
+      .map(() => "?")
+      .join(", ")}) AND sizes.isAvailable = 1`;
+    queryParams.push(...filters.size);
+  }
 
   // FILTER BY BRAND
   if (filters.brand && filters.brand.length > 0) {
@@ -47,7 +52,6 @@ export const getFilteredCount = async (req, res, next) => {
   // FILTER BY DISCOUNT
   if (filters.discount && filters.discount === "Ja") {
     whereClause += " AND products.discountPercentage > 0";
-    queryParams.push(filters.discount);
   }
 
   try {
@@ -55,7 +59,10 @@ export const getFilteredCount = async (req, res, next) => {
       SELECT COUNT(DISTINCT products.id) AS filteredCount
       FROM products
       ${colorsJoin}
+      ${sizesJoin}
       WHERE 1=1 ${whereClause}`;
+
+    console.log(query);
 
     const [data] = await pool.execute(query, queryParams);
 
