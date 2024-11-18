@@ -7,7 +7,7 @@ export const getFilters = async (req, res, next) => {
     const [data] = await pool.query(query);
 
     const sortOptions = {
-      filterCategory: "Sortierung",
+      filterCategory: "sort",
       filterOptions: [
         "Preis aufsteigend",
         "Preis absteigend",

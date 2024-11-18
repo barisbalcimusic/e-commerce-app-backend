@@ -5,6 +5,7 @@ import { getDetailsOfProduct } from "../controllers/products/getDetailsOfProduct
 import { getCollections } from "../controllers/products/getCollections.js";
 import { getFilteredProducts } from "../controllers/products/getFilteredProducts.js";
 import { getFilters } from "../controllers/products/getFilters.js";
+import { getFilteredCount } from "../controllers/products/getFilteredCount.js";
 
 export const productRouter = express.Router();
 
@@ -13,6 +14,9 @@ productRouter.route("/").get(getFilteredProducts).delete(deleteAllProducts);
 
 // FILTERS
 productRouter.route("/filters").get(getFilters);
+
+// COUNT PRODUCTS BASED ON FILTERS
+productRouter.route("/filteredCount").post(getFilteredCount);
 
 // SINGLE PRODUCT
 productRouter.route("/:id").get(getSingleProduct);
