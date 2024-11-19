@@ -62,8 +62,6 @@ export const getFilteredCount = async (req, res, next) => {
       ${sizesJoin}
       WHERE 1=1 ${whereClause}`;
 
-    console.log(query);
-
     const [data] = await pool.execute(query, queryParams);
 
     res.status(200).json({ data: data[0].filteredCount });

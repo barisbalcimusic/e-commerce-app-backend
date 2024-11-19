@@ -1,28 +1,35 @@
 import express from "express";
-import { deleteAllProducts } from "../controllers/products/deleteAllProducts.js";
 import { getSingleProduct } from "../controllers/products/getSingleProduct.js";
 import { getDetailsOfProduct } from "../controllers/products/getDetailsOfProduct.js";
-import { getCollections } from "../controllers/products/getCollections.js";
+import { getProductsByCollections } from "../controllers/products/getProductsByCollections.js";
 import { getFilteredProducts } from "../controllers/products/getFilteredProducts.js";
 import { getFilters } from "../controllers/products/getFilters.js";
 import { getFilteredCount } from "../controllers/products/getFilteredCount.js";
+import { getProductsByTargetGroup } from "../controllers/products/getProductsByTargetGroup.js";
+import { getProductsByCategory } from "../controllers/products/getProductsByCategory.js";
 
 export const productRouter = express.Router();
 
-// ALL PRODUCTS
-productRouter.route("/").get(getFilteredProducts).delete(deleteAllProducts);
+// FILTERED PRODUCTS
+productRouter.route("/filteredProducts").post(getFilteredProducts);
+
+// PRODUCTS BY CATEGORY
+productRouter.route("/category").get(getProductsByCategory);
+
+// COLLECTIONS
+productRouter.route("/collection").get(getProductsByCollections);
+
+// PRODUCTS BY TARGET GROUP
+productRouter.route("/targetGroup").get(getProductsByTargetGroup);
 
 // FILTERS
 productRouter.route("/filters").get(getFilters);
 
-// COUNT PRODUCTS BASED ON FILTERS
+// PRODUCT COUNT BASED ON FILTERS
 productRouter.route("/filteredCount").post(getFilteredCount);
 
 // SINGLE PRODUCT
 productRouter.route("/:id").get(getSingleProduct);
-
-// COLLECTIONS
-productRouter.route("/collections/:collection").get(getCollections);
 
 // DETAILS OF A SINGLE PRODUCT (DYNAMIC)
 productRouter.route("/:id/:detail").get(getDetailsOfProduct);

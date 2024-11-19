@@ -3,8 +3,6 @@ import { pool } from "../../utils/config/DBconfig.js";
 export const getDetailsOfProduct = async (req, res, next) => {
   const { detail, id } = req.params;
 
-  console.log(detail, id);
-
   if (!detail || !id) {
     return res.status(400).json({ message: "Missing asd or id information" });
   }

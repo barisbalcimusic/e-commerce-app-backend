@@ -1,11 +1,14 @@
 import { pool } from "../../utils/config/DBconfig.js";
 import fs from "fs";
 
-export const getCollections = async (req, res, next) => {
-  const { collection } = req.params;
+export const getProductsByCollections = async (req, res, next) => {
+  const { collection } = req.query;
+  console.log(collection);
 
   if (!collection) {
-    return res.status(400).json({ message: "Missing collection information" });
+    return res
+      .status(400)
+      .json({ message: "Bad Request: Missing collection information" });
   }
 
   const allowedCollections = ["bestsellers", "discounted", "favorites"];
