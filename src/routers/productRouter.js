@@ -10,6 +10,9 @@ import { getProductsByCategory } from "../controllers/products/getProductsByCate
 
 export const productRouter = express.Router();
 
+// SINGLE PRODUCT
+productRouter.route("/singleProduct/:id").get(getSingleProduct);
+
 // FILTERED PRODUCTS
 productRouter.route("/filteredProducts").post(getFilteredProducts);
 
@@ -28,8 +31,5 @@ productRouter.route("/filters").get(getFilters);
 // PRODUCT COUNT BASED ON FILTERS
 productRouter.route("/filteredCount").post(getFilteredCount);
 
-// SINGLE PRODUCT
-productRouter.route("/:id").get(getSingleProduct);
-
 // DETAILS OF A SINGLE PRODUCT (DYNAMIC)
-productRouter.route("/:id/:detail").get(getDetailsOfProduct);
+// productRouter.route("/:id/:detail").get(getDetailsOfProduct);
