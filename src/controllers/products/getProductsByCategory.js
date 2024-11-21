@@ -3,8 +3,6 @@ import { pool } from "../../utils/config/DBconfig.js";
 export const getProductsByCategory = async (req, res, next) => {
   const { targetGroup, category } = req.query;
 
-  console.log(targetGroup, category);
-
   if (!category) {
     res.status(400).json({ message: "Bad Request: Missing category" });
     return;
@@ -19,7 +17,7 @@ export const getProductsByCategory = async (req, res, next) => {
         ) AS images
       FROM products
       LEFT JOIN images ON products.id = images.product_id
-      ${targetGroup && "WHERE products.targetGroup = ?"}
+      ${targetGroup ? "WHERE products.targetGroup = ?" : ""}
       AND products.category = ? 
       GROUP BY 
         products.id, 
