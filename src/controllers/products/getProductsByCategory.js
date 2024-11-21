@@ -17,8 +17,11 @@ export const getProductsByCategory = async (req, res, next) => {
         ) AS images
       FROM products
       LEFT JOIN images ON products.id = images.product_id
-      ${targetGroup ? "WHERE products.targetGroup = ?" : ""}
-      AND products.category = ? 
+      ${
+        targetGroup
+          ? "WHERE products.targetGroup = ? AND products.category = ?"
+          : "WHERE products.category = ?"
+      }
       GROUP BY 
         products.id, 
         products.name, 
@@ -34,7 +37,11 @@ export const getProductsByCategory = async (req, res, next) => {
 
     const queryParams = targetGroup ? [targetGroup, category] : [category];
 
+    console.log(queryParams);
+
     const [data] = await pool.execute(query, queryParams);
+    console.log(data);
+
     res.status(200).json(data);
   } catch (error) {
     console.error("Database Query Error:", error.message);
