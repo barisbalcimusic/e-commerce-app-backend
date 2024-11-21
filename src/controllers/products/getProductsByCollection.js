@@ -1,7 +1,7 @@
 import { pool } from "../../utils/config/DBconfig.js";
 import fs from "fs";
 
-export const getProductsByCollections = async (req, res, next) => {
+export const getProductsByCollection = async (req, res, next) => {
   const { collection } = req.query;
   console.log(collection);
 

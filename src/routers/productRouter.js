@@ -1,12 +1,12 @@
 import express from "express";
 import { getSingleProduct } from "../controllers/products/getSingleProduct.js";
 import { getDetailsOfProduct } from "../controllers/products/getDetailsOfProduct.js";
-import { getProductsByCollections } from "../controllers/products/getProductsByCollections.js";
 import { getFilteredProducts } from "../controllers/products/getFilteredProducts.js";
 import { getFilters } from "../controllers/products/getFilters.js";
 import { getFilteredCount } from "../controllers/products/getFilteredCount.js";
 import { getProductsByTargetGroup } from "../controllers/products/getProductsByTargetGroup.js";
 import { getProductsByCategory } from "../controllers/products/getProductsByCategory.js";
+import { getProductsByCollection } from "../controllers/products/getProductsByCollection.js";
 
 export const productRouter = express.Router();
 
@@ -20,7 +20,7 @@ productRouter.route("/filteredProducts").post(getFilteredProducts);
 productRouter.route("/category").get(getProductsByCategory);
 
 // COLLECTIONS
-productRouter.route("/collection").get(getProductsByCollections);
+productRouter.route("/collection").get(getProductsByCollection);
 
 // PRODUCTS BY TARGET GROUP
 productRouter.route("/targetGroup").get(getProductsByTargetGroup);

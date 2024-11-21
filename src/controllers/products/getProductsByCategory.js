@@ -3,6 +3,8 @@ import { pool } from "../../utils/config/DBconfig.js";
 export const getProductsByCategory = async (req, res, next) => {
   const { targetGroup, category } = req.query;
 
+  console.log(targetGroup, category);
+
   if (!category) {
     res.status(400).json({ message: "Bad Request: Missing category" });
     return;
@@ -17,7 +19,7 @@ export const getProductsByCategory = async (req, res, next) => {
         ) AS images
       FROM products
       LEFT JOIN images ON products.id = images.product_id
-      WHERE products.targetGroup = ?
+      ${targetGroup && "WHERE products.targetGroup = ?"}
       AND products.category = ? 
       GROUP BY 
         products.id, 
@@ -32,7 +34,9 @@ export const getProductsByCategory = async (req, res, next) => {
         products.stock, 
         products.soldCount`;
 
-    const [data] = await pool.execute(query, [targetGroup, category]);
+    const queryParams = targetGroup ? [targetGroup, category] : [category];
+
+    const [data] = await pool.execute(query, queryParams);
     res.status(200).json(data);
   } catch (error) {
     console.error("Database Query Error:", error.message);
