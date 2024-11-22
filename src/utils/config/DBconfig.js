@@ -42,7 +42,7 @@ const initializeDatabase = async () => {
     await pool.query(initQuery);
     console.log("Database initialized successfully");
   } catch (error) {
-    console.log("Database initialization failed: ", error.message);
+    console.log("Database initialization failed:", error.message);
   }
 };
 
