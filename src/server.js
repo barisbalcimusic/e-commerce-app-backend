@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ROUTES
-app.use("/", appRouter);
+app.use("/buytheway", appRouter);
 app.use(errorMiddleware);
 
 // SERVER
