@@ -7,13 +7,16 @@ configDotenv();
 const user = process.env.USER;
 const password = process.env.PASSWORD;
 const database = process.env.DATABASE;
+const host = process.env.HOST;
+const mysqlPort = process.env.MYSQL_PORT;
 
 // CREATE A CONNECTION POOL
 export const pool = mysql.createPool({
-  host: "localhost",
+  host,
   user,
   password,
   database,
+  port: mysqlPort || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,
