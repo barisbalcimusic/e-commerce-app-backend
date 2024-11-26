@@ -1,4 +1,12 @@
 SELECT 
+  'targetGroup' AS filterCategory,
+  JSON_ARRAYAGG(targetGroup) AS filterOptions,
+  'checkbox' AS inputType
+FROM (SELECT DISTINCT targetGroup FROM products) AS distinct_targetGroups
+
+UNION ALL
+
+SELECT 
   'category' AS filterCategory,
   JSON_ARRAYAGG(category) AS filterOptions,
   'checkbox' AS inputType

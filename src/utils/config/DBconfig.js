@@ -4,19 +4,13 @@ import fs from "fs";
 
 configDotenv();
 
-const user = process.env.USER;
-const password = process.env.PASSWORD;
-const database = process.env.DATABASE;
-const host = process.env.HOST;
-const mysqlPort = process.env.MYSQL_PORT;
-
 // CREATE A CONNECTION POOL
 export const pool = mysql.createPool({
-  host,
-  user,
-  password,
-  database,
-  port: mysqlPort || 3306,
+  host: process.env.HOST || "localhost",
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  database: process.env.DATABASE,
+  port: process.env.MYSQL_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,
