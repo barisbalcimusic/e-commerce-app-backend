@@ -21,8 +21,6 @@ export const getFilters = async (req, res, next) => {
 
     const filters = [sortOptions, ...data];
 
-    console.log(filters);
-
     res.status(200).json(filters);
   } catch (error) {
     next(error);

@@ -2,7 +2,6 @@ import { pool } from "../../utils/config/DBconfig.js";
 
 export const getFilteredProducts = async (req, res, next) => {
   const filters = req.body;
-  console.log(filters);
 
   // REDUCE FILTERS TO ARRAY TO CHECK IF EMPTY
   const reducedFilters = Object.keys(filters).reduce((acc, curr) => {
@@ -38,13 +37,20 @@ export const getFilteredProducts = async (req, res, next) => {
         products.stock, 
         products.soldCount;
     `);
-    console.log(data);
 
     return res.status(200).json(data);
   }
 
   let whereClause = "";
   const queryParams = [];
+
+  // FILTER BY TARGET GROUP
+  if (filters.targetGroup?.length > 0) {
+    whereClause += ` AND products.targetGroup IN (${filters.targetGroup
+      .map(() => "?")
+      .join(", ")})`;
+    queryParams.push(...filters.targetGroup);
+  }
 
   // FILTER BY CATEGORY
   if (filters.category?.length > 0) {

@@ -6,6 +6,14 @@ export const getFilteredCount = async (req, res, next) => {
   let whereClause = "";
   const queryParams = [];
 
+  // FILTER BY TARGET GROUP
+  if (filters.targetGroup?.length > 0) {
+    whereClause += ` AND products.targetGroup IN (${filters.targetGroup
+      .map(() => "?")
+      .join(", ")})`;
+    queryParams.push(...filters.targetGroup);
+  }
+
   // FILTER BY CATEGORY
   if (filters.category && filters.category.length > 0) {
     whereClause += ` AND products.category IN (${filters.category
