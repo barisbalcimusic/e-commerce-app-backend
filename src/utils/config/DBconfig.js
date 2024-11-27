@@ -7,7 +7,7 @@ dotenv.config();
 // CREATE A CONNECTION POOL
 export const pool = mysql.createPool({
   host: process.env.HOST || "localhost",
-  user: process.env.USER,
+  user: process.env.USERNAME,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
   port: process.env.MYSQL_PORT || 3306,
@@ -24,7 +24,6 @@ export const pool = mysql.createPool({
 // TEST DATABASE CONNECTION
 const testDatabaseConnection = async () => {
   try {
-    console.log(process.env.USER);
     const connection = await pool.getConnection();
     console.log("Connected to the database successfully!");
     connection.release();
