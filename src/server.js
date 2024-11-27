@@ -20,6 +20,6 @@ app.use("/", appRouter);
 app.use(errorMiddleware);
 
 // SERVER
-app.listen(port, async () => {
+app.listen(port, "0.0.0.0", async () => {
   console.log(`Server listening on port ${port}`);
 });
