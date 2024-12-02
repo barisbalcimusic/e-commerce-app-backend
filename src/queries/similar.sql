@@ -2,7 +2,8 @@ SELECT products.*,
 JSON_ARRAYAGG(JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images
 FROM products 
 JOIN images ON products.id = images.product_id
-WHERE products.category = ?
+WHERE products.category = ? 
+AND products.targetGroup = ?
 GROUP BY 
     products.id, 
     products.name, 

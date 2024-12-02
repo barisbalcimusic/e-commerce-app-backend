@@ -2,7 +2,7 @@ import { pool } from "../../utils/config/DBconfig.js";
 import fs from "fs";
 
 export const getProductsByCollection = async (req, res, next) => {
-  const { collection, category } = req.query;
+  const { collection, category, targetGroup } = req.query;
 
   if (!collection) {
     return res
@@ -31,7 +31,10 @@ export const getProductsByCollection = async (req, res, next) => {
 
     const query = queries[collection];
 
-    const [data] = await pool.execute(query, [category ? category : null]);
+    const [data] = await pool.execute(
+      query,
+      category && targetGroup ? [category, targetGroup] : null
+    );
     res.status(200).json(data);
   } catch (error) {
     next(error);
