@@ -4,6 +4,7 @@ FROM products
 JOIN images ON products.id = images.product_id
 WHERE products.category = ? 
 AND products.targetGroup = ?
+AND products.id != ?
 GROUP BY 
     products.id, 
     products.name, 
