@@ -37,10 +37,7 @@ export const getProductsByCategory = async (req, res, next) => {
 
     const queryParams = targetGroup ? [targetGroup, category] : [category];
 
-    console.log(queryParams);
-
     const [data] = await pool.execute(query, queryParams);
-    console.log(data);
 
     res.status(200).json(data);
   } catch (error) {

@@ -36,6 +36,7 @@ export const getProductsByCollection = async (req, res, next) => {
       query,
       category && targetGroup && id ? [category, targetGroup, Number(id)] : null
     );
+
     res.status(200).json(data);
   } catch (error) {
     next(error);
