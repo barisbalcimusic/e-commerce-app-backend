@@ -1,12 +1,12 @@
 import express from "express";
 import { getSingleProduct } from "../controllers/products/getSingleProduct.js";
-import { getDetailsOfProduct } from "../controllers/products/getDetailsOfProduct.js";
 import { getFilteredProducts } from "../controllers/products/getFilteredProducts.js";
 import { getFilters } from "../controllers/products/getFilters.js";
 import { getFilteredCount } from "../controllers/products/getFilteredCount.js";
 import { getProductsByTargetGroup } from "../controllers/products/getProductsByTargetGroup.js";
 import { getProductsByCategory } from "../controllers/products/getProductsByCategory.js";
 import { getProductsByCollection } from "../controllers/products/getProductsByCollection.js";
+import { getSearchResults } from "../controllers/products/getSearchResults.js";
 
 export const productRouter = express.Router();
 
@@ -31,5 +31,5 @@ productRouter.route("/filters").get(getFilters);
 // PRODUCT COUNT BASED ON FILTERS
 productRouter.route("/filteredCount").post(getFilteredCount);
 
-// DETAILS OF A SINGLE PRODUCT (DYNAMIC)
-// productRouter.route("/:id/:detail").get(getDetailsOfProduct);
+// SEARCH
+productRouter.route("/search").get(getSearchResults);
