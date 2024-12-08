@@ -6,6 +6,7 @@ import { getFilteredCount } from "../controllers/products/getFilteredCount.js";
 import { getProductsByTargetGroup } from "../controllers/products/getProductsByTargetGroup.js";
 import { getProductsByCategory } from "../controllers/products/getProductsByCategory.js";
 import { getProductsByCollection } from "../controllers/products/getProductsByCollection.js";
+import { getSearchResultsList } from "../controllers/products/getSearchResultsList.js";
 import { getSearchResults } from "../controllers/products/getSearchResults.js";
 
 export const productRouter = express.Router();
@@ -31,5 +32,8 @@ productRouter.route("/filters").get(getFilters);
 // PRODUCT COUNT BASED ON FILTERS
 productRouter.route("/filteredCount").post(getFilteredCount);
 
-// SEARCH
-productRouter.route("/search").get(getSearchResults);
+// SEARCH LIST
+productRouter.route("/searchList").get(getSearchResultsList);
+
+// SEARCH RESULTS
+productRouter.route("/searchResults").get(getSearchResults);

@@ -1,7 +1,6 @@
 import { pool } from "../../utils/config/DBconfig.js";
-import fs from "fs";
 
-export const getSearchResults = async (req, res, next) => {
+export const getSearchResultsList = async (req, res, next) => {
   try {
     const { inputValue } = req.query;
 
@@ -9,10 +8,17 @@ export const getSearchResults = async (req, res, next) => {
       res.status(400).json({ message: "Missing input value" });
     }
 
-    const query = fs.readFileSync("src/queries/searchResults.sql", "utf-8");
-
     // WILDCARD
     const searchValue = `%${inputValue}%`;
+
+    const query = `
+    SELECT id, name, description, category, targetGroup, brand FROM products 
+    WHERE name LIKE ?
+    OR description LIKE ?
+    OR category LIKE ?
+    OR targetGroup LIKE ?
+    OR brand LIKE ?
+    `;
 
     const [data] = await pool.query(query, [
       searchValue,
