@@ -20,10 +20,11 @@ export const getFilteredProducts = async (req, res, next) => {
   if (reducedFilters.length === 0) {
     const [data] = await pool.execute(`
       SELECT products.*, 
-        JSON_ARRAYAGG(
-          JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images
+          JSON_ARRAYAGG(JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images,
+          JSON_ARRAYAGG(JSON_OBJECT('size', sizes.size, 'isAvailable', sizes.isAvailable)) AS sizes
       FROM products
-      JOIN images ON products.id = images.product_id
+          LEFT JOIN images ON products.id = images.product_id
+          LEFT JOIN sizes ON products.id = sizes.product_id
       GROUP BY 
         products.id, 
         products.name, 
@@ -77,9 +78,7 @@ export const getFilteredProducts = async (req, res, next) => {
   }
 
   // FILTER BY SIZE
-  let sizesJoin = "";
   if (filters.size?.length > 0) {
-    sizesJoin = `LEFT JOIN sizes ON products.id = sizes.product_id`;
     whereClause += ` AND sizes.size IN (${filters.size
       .map(() => "?")
       .join(", ")}) AND sizes.isAvailable = 1`;
@@ -102,13 +101,13 @@ export const getFilteredProducts = async (req, res, next) => {
 
   try {
     const query = `
-    SELECT products.*, 
-      JSON_ARRAYAGG(
-      JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images
+      SELECT products.*, 
+          JSON_ARRAYAGG(JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images,
+          JSON_ARRAYAGG(JSON_OBJECT('size', sizes.size, 'isAvailable', sizes.isAvailable)) AS sizes
       FROM products
-      ${colorsJoin}
-      ${sizesJoin}
-      JOIN images ON products.id = images.product_id
+          ${colorsJoin}
+          LEFT JOIN images ON products.id = images.product_id
+          LEFT JOIN sizes ON products.id = sizes.product_id
       WHERE 1=1 ${whereClause}
       GROUP BY 
         products.id, 

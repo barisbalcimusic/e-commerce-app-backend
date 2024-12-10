@@ -1,7 +1,9 @@
-SELECT products.*,
-JSON_ARRAYAGG(JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images
-FROM products 
-JOIN images ON products.id = images.product_id 
+SELECT products.*, 
+    JSON_ARRAYAGG(JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images,
+    JSON_ARRAYAGG(JSON_OBJECT('size', sizes.size, 'isAvailable', sizes.isAvailable)) AS sizes
+FROM products
+LEFT JOIN images ON products.id = images.product_id
+LEFT JOIN sizes ON products.id = sizes.product_id
 GROUP BY 
     products.id, 
     products.name, 
@@ -14,5 +16,4 @@ GROUP BY
     products.discountPercentage, 
     products.stock, 
     products.soldCount
-ORDER BY soldCount 
-DESC LIMIT 10
+LIMIT 10;
