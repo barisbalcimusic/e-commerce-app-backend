@@ -12,34 +12,34 @@ CREATE TABLE IF NOT EXISTS products (
     targetGroup VARCHAR(255) NOT NULL,
     brand VARCHAR(255) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    rating DECIMAL(3, 2),
-    discountPercentage DECIMAL(5, 2) NOT NULL,
-    stock INT NOT NULL DEFAULT 0,
-    soldCount INT NOT NULL DEFAULT 0 
+    rating INT DEFAULT 0,
+    discountPercentage INT DEFAULT 0,
+    stock INT DEFAULT 0,
+    soldCount INT DEFAULT 0 
 );
 
 -- SIZES
 CREATE TABLE IF NOT EXISTS sizes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
+    product_id INT NOT NULL,
     size VARCHAR(50) NOT NULL,
-    isAvailable BOOLEAN DEFAULT TRUE,
+    isAvailable TINYINT(1) DEFAULT 1,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- COLORS
 CREATE TABLE IF NOT EXISTS colors (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    name VARCHAR(50),
-    hexCode VARCHAR(7),
+    product_id INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    hexCode VARCHAR(7) NOT NULL,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 -- IMAGES
 CREATE TABLE IF NOT EXISTS images (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
+    product_id INT NOT NULL,
     url VARCHAR(255) NOT NULL,
     alt TEXT DEFAULT NULL,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS images (
 -- MATERIALS
 CREATE TABLE IF NOT EXISTS materials (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    name VARCHAR(255),
+    product_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
     percentage DECIMAL(5, 2),
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS materials (
 -- CARE INSTRUCTIONS
 CREATE TABLE IF NOT EXISTS care_instructions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
+    product_id INT NOT NULL,
     instruction TEXT,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
