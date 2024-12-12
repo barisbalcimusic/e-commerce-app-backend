@@ -21,6 +21,7 @@
     "mysql2": "^3.11.3",
     "nodemon": "^3.1.7",
     "sanitize-html": "^2.13.1",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "validator": "^13.12.0"
   }
 }

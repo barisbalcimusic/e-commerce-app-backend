@@ -1,6 +1,7 @@
 import { pool } from "../../utils/config/DBconfig.js";
 import { hashPassword } from "../../utils/crypto.js";
 import { sanitizeInput } from "../../utils/sanitizer.js";
+import validator from "validator";
 
 export const register = async (req, res, next) => {
   try {
@@ -8,7 +9,13 @@ export const register = async (req, res, next) => {
 
     // CHECK IF REQUIRED FIELDS ARE EMPTY
     if (!firstname || !lastname || !email || !password) {
-      req.status(400).json({ message: "Please provide all required fields" });
+      res.status(400).json({ message: "missingInput" });
+    }
+
+    // VALIDATE EMAIL
+    const isEmailValid = validator.isEmail(email);
+    if (!isEmailValid) {
+      return res.status(400).json({ message: "invalidEmailFormat" });
     }
 
     // SANITIZE INPUTS STEP 1
@@ -24,7 +31,7 @@ export const register = async (req, res, next) => {
       !sanitizedEmail ||
       !sanitizedPassword
     ) {
-      return res.status(400).json({ message: "Please provide valid inputs" });
+      return res.status(400).json({ message: "vorbiddenInput" });
     }
 
     // SANITIZE INPUTS STEP 2
@@ -33,15 +40,20 @@ export const register = async (req, res, next) => {
     email = sanitizedEmail.trim().toLowerCase();
     password = sanitizedPassword.trim();
 
+    // VALIDATE PASSWORD
+    if (password.length < 8) {
+      return res.status(400).json({
+        message: "invalidPassword",
+      });
+    }
+
     const [user] = await pool.execute("SELECT * FROM USERS WHERE email = ?", [
       email,
     ]);
 
     // CHECK IF USER ALREADY EXISTS
     if (user.length > 0) {
-      return res
-        .status(400)
-        .json({ message: `User with email ${email} already exists` });
+      return res.status(400).json({ message: "emailAlreadyExists" });
     } else {
       // HASH PASSWORD
       const hashedPassword = await hashPassword(password);
@@ -53,14 +65,10 @@ export const register = async (req, res, next) => {
       );
 
       if (result.affectedRows === 0) {
-        return res
-          .status(500)
-          .json({ message: `Server error. User could not be created.` });
+        return res.status(500).json({ message: "dbError" });
       }
 
-      res
-        .status(201)
-        .json({ message: `User ${email} has been successfully created.` });
+      res.status(201).json({ message: "success" });
     }
   } catch (error) {
     next(error);
