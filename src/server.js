@@ -10,7 +10,14 @@ const app = express();
 dotenv.config({ path: "../.env" });
 const port = process.env.PORT;
 
-app.use(cors());
+app.use(
+  cors({
+    //! ONLY FOR TESTING
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.use(cookieParser());
