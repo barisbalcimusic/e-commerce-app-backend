@@ -1,8 +1,10 @@
 import jwt from "jsonwebtoken";
 
 // GENERATE ACCESS TOKEN
-export const generateaccessToken = (userId, accessTokenSecret) => {
-  return jwt.sign({ userId }, accessTokenSecret, { expiresIn: "1d" });
+export const generateaccessToken = (userId, firstname, accessTokenSecret) => {
+  return jwt.sign({ userId, firstname }, accessTokenSecret, {
+    expiresIn: "1d",
+  });
 };
 
 // VERIFY ACCESS TOKEN

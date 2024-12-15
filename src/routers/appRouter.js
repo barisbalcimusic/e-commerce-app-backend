@@ -7,6 +7,6 @@ import { authRouter } from "./authRouter.js";
 export const appRouter = express.Router();
 
 appRouter.use("/auth", authRouter);
-appRouter.use("/users", userRouter);
+appRouter.use("/user", userRouter);
 appRouter.use("/products", productRouter);
 appRouter.use("/orders", orderRouter);

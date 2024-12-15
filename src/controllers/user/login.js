@@ -33,7 +33,11 @@ export const login = async (req, res, next) => {
       return res.status(500).json({ message: "accessTokenSecretNotFound" });
     }
 
-    const accessToken = generateaccessToken(user.id, accessTokenSecret);
+    const accessToken = generateaccessToken(
+      user.id,
+      user.firstname,
+      accessTokenSecret
+    );
 
     if (!accessToken) {
       return res.status(500).json({ message: "accessTokenCreateError" });
@@ -50,12 +54,6 @@ export const login = async (req, res, next) => {
 
     res.status(200).json({
       message: "success",
-      data: {
-        id: user.user_id,
-        email: user.email,
-        firstname: user.firstname,
-        lastname: user.lastname,
-      },
     });
   } catch (error) {
     next(error);

@@ -8,7 +8,7 @@ export const userRouter = express.Router();
 
 // USER
 userRouter
-  .route("/user")
+  .route("/")
   .get(getSingleUser)
   .delete(deleteSingleUser)
   .patch(updateUser);

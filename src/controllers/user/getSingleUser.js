@@ -1,15 +1,17 @@
-import { pool } from "../../utils/config/DBconfig.js";
+import dotenv from "dotenv";
+import { verifyAccessToken } from "../../utils/jwt.js";
+
+dotenv.config();
+
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
 export const getSingleUser = async (req, res, next) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
   try {
-    const { email } = req.body;
-    const [[user]] = await pool.execute("SELECT * FROM users WHERE email = ?", [
-      email,
-    ]);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    res.status(200).json({ user });
+    const decoded = verifyAccessToken(token, accessTokenSecret);
+    res.json({ id: decoded.userId, firstname: decoded.firstname });
   } catch (error) {
     next(error);
   }
