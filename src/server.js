@@ -12,8 +12,10 @@ const port = process.env.PORT;
 
 app.use(
   cors({
-    origin: ["https://btw.barisbalci.de"],
+    origin: "https://btw.barisbalci.de",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
