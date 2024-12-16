@@ -9,13 +9,14 @@ const app = express();
 
 dotenv.config({ path: "../.env" });
 const port = process.env.PORT;
+const nodeEnv = process.env.NODE_ENV;
+const clientURL =
+  nodeEnv === "prod" ? process.env.CLIENT_URL_PROD : process.env.CLIENT_URL_DEV;
 
 app.use(
   cors({
-    origin: "https://btw.barisbalci.de",
+    origin: clientURL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
