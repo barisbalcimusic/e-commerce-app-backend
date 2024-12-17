@@ -2,19 +2,27 @@ import { pool } from "../../utils/config/DBconfig.js";
 
 export const updateUser = async (req, res, next) => {
   try {
-    const { fieldToEdit, value, userId } = req.body;
+    const { fieldToEdit, newValue, userId } = req.body;
 
-    const allowedFields = ["firstname", "lastname", "password"];
-
-    if (!allowedFields.includes(fieldToEdit)) {
-      return res.status(400).json({ message: "Invalid field to update." });
+    if (!fieldToEdit || !newValue || !userId) {
+      return res.status(400).json({ message: "missingFieldsForUpdate" });
     }
 
-    const query = `UPDATE users SET ${fieldToEdit} = ? WHERE user_id = ?`;
+    const allowedFields = ["firstname", "lastname", "email", "password"];
 
-    await pool.execute(query, [value, userId]);
+    if (!allowedFields.includes(fieldToEdit)) {
+      return res.status(400).json({ message: "invalidFieldUpdate" });
+    }
 
-    res.status(200).json({ message: `${fieldToEdit} has been updated.` });
+    const query = `UPDATE users SET ${fieldToEdit} = ? WHERE id = ?`;
+
+    const result = await pool.query(query, [newValue, userId]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "canNotUpdate" });
+    }
+
+    res.status(200).json({ message: "success" });
   } catch (error) {
     next(error);
   }
