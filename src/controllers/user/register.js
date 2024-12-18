@@ -2,6 +2,7 @@ import { pool } from "../../utils/config/DBconfig.js";
 import { hashPassword } from "../../utils/crypto.js";
 import { sanitizeInput } from "../../utils/sanitizer.js";
 import validator from "validator";
+import { testPassword } from "../../utils/testPassword.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -18,13 +19,13 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ message: "invalidEmailFormat" });
     }
 
-    // SANITIZE INPUTS STEP 1
+    // SANITIZE INPUTS STEP 1 (SANITIZE-HTM)
     const sanitizedFirstname = sanitizeInput(firstname);
     const sanitizedLastname = sanitizeInput(lastname);
     const sanitizedEmail = sanitizeInput(email);
     const sanitizedPassword = sanitizeInput(password);
 
-    // CHECK IF SANITIZED INPUTS ARE EMPTY
+    // CHECK IF SANITIZED INPUTS ARE EMPTY (IF YES IT MEANS THERE WAS A SCRIPT TAG)
     if (
       !sanitizedFirstname ||
       !sanitizedLastname ||
@@ -40,8 +41,10 @@ export const register = async (req, res, next) => {
     email = sanitizedEmail.trim().toLowerCase();
     password = sanitizedPassword.trim();
 
-    // VALIDATE PASSWORD
-    if (password.length < 8) {
+    // VALIDATE PASSWORD (RETURNS BOOLEAN)
+    const isPasswordValid = testPassword(password);
+
+    if (!isPasswordValid) {
       return res.status(400).json({
         message: "invalidPassword",
       });
