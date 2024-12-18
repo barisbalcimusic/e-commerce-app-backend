@@ -11,7 +11,7 @@ export const getSingleUser = async (req, res, next) => {
 
   try {
     const decoded = verifyAccessToken(token, accessTokenSecret);
-    res.json({ id: decoded.userId, firstname: decoded.firstname });
+    res.json({ id: decoded.userId });
   } catch (error) {
     next(error);
   }

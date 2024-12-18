@@ -1,9 +1,12 @@
-import e from "express";
 import { pool } from "../../utils/config/DBconfig.js";
 
 export const getUserAccountInfo = async (req, res, next) => {
   try {
-    const { userId } = req.query;
+    const { userId, requestedFields } = req.query;
+
+    if (!userId) {
+      return res.status(400).json({ message: "missingUserId" });
+    }
 
     const [[user]] = await pool.execute("SELECT * FROM users WHERE id = ?", [
       userId,
@@ -13,13 +16,20 @@ export const getUserAccountInfo = async (req, res, next) => {
       return res.status(404).json({ message: "userNotFound" });
     }
 
+    const data = {};
+    if (requestedFields) {
+      if (Array.isArray(requestedFields)) {
+        requestedFields.forEach((field) => {
+          data[field] = user[field];
+        });
+      } else {
+        data[requestedFields] = user[requestedFields];
+      }
+    }
+
     res.status(200).json({
       message: "success",
-      data: {
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-      },
+      data,
     });
   } catch (error) {
     next(error);
