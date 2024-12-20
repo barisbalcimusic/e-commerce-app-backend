@@ -2,25 +2,62 @@ import { pool } from "../../utils/config/DBconfig.js";
 
 export const postOrder = async (req, res, next) => {
   try {
-    const { adress, paymentMethod, cartItems } = req.body;
+    const { userId, address, paymentMethod, cartItems, total } = req.body;
 
-    // const orderDate = new Date().toISOString().slice(0, 19).replace("T", " ");
+    if (!userId || !address || !paymentMethod || !cartItems || !total) {
+      return res.status(400).json({ message: "missingOrderInfo" });
+    }
 
-    const [result] = await pool.query(
-      "INSERT INTO orders (user_id, order_date, total_amount) VALUES (?, ?, ?)",
-      [id, orderDate, total]
+    // SAVE ORDER INTO ORDERS TABLE
+    const [orderResult] = await pool.query(
+      "INSERT INTO orders (user_id, total) VALUES (?, ?)",
+      [userId, total]
     );
 
-    // const orderId = result.insertId;
+    if (orderResult.affectedRows === 0) {
+      return res.status(400).json({ message: "orderNotCreated" });
+    }
 
-    // for (const product of order.orderedProducts) {
-    //   await pool.execute(
-    //     "INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)",
-    //     [orderId, product.id, product.amount, product.singlePrice]
-    //   );
-    // }
+    // SAVE ORDERED PRODUCTS INTO ORDER_ITEMS TABLE
+    const orderId = orderResult.insertId;
+    for (const cartItem of cartItems) {
+      const [orderItemResult] = await pool.query(
+        "INSERT INTO order_items (order_id, product_id, size, quantity, price) VALUES (?, ?, ?, ?, ?)",
+        [
+          orderId,
+          cartItem.item.id,
+          cartItem.size,
+          cartItem.quantity,
+          cartItem.item.price,
+        ]
+      );
 
-    res.status(201).json({ message: "Order received!" });
+      if (orderItemResult.affectedRows === 0) {
+        return res.status(400).json({ message: "orderItemsNotCreated" });
+      }
+    }
+
+    // SAVE ADDRESS INTO ADDRESSES TABLE
+    const [addressResult] = await pool.query(
+      "INSERT INTO addresses (user_id, title, firstname, lastname, street, house_number, postal_code, city, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        userId,
+        address.title,
+        address.firstName,
+        address.lastName,
+        address.street,
+        address.houseNumber,
+        address.postalCode,
+        address.city,
+        address.country,
+      ]
+    );
+
+    if (addressResult.affectedRows === 0) {
+      return res.status(400).json({ message: "addressNotCreated" });
+    }
+
+    res.status(201).json({ message: "success" });
   } catch (error) {
     next(error);
   }
