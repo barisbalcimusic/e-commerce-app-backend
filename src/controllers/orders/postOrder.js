@@ -4,6 +4,8 @@ export const postOrder = async (req, res, next) => {
   try {
     const { userId, address, paymentMethod, cartItems, total } = req.body;
 
+    //! VALIDATE & SANITIZE INPUTS LATER
+
     if (!userId || !address || !paymentMethod || !cartItems || !total) {
       return res.status(400).json({ message: "missingOrderInfo" });
     }

@@ -1,4 +1,4 @@
-SELECT products.*, 
+    SELECT products.*, 
     JSON_ARRAYAGG(JSON_OBJECT('url', images.url, 'alt', images.alt)) AS images,
     JSON_ARRAYAGG(JSON_OBJECT('size', sizes.size, 'isAvailable', sizes.isAvailable)) AS sizes
 FROM products

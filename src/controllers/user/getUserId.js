@@ -5,7 +5,7 @@ dotenv.config();
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
-export const getSingleUser = async (req, res, next) => {
+export const getUserId = async (req, res, next) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json({ error: "Unauthorized" });
 

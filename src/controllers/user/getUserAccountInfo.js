@@ -2,7 +2,8 @@ import { pool } from "../../utils/config/DBconfig.js";
 
 export const getUserAccountInfo = async (req, res, next) => {
   try {
-    const { userId, requestedFields } = req.query;
+    const { userId } = req.user;
+    const { requestedFields } = req.query;
 
     if (!userId) {
       return res.status(400).json({ message: "missingUserId" });

@@ -57,22 +57,24 @@ export const register = async (req, res, next) => {
     // CHECK IF USER ALREADY EXISTS
     if (user.length > 0) {
       return res.status(400).json({ message: "emailAlreadyExists" });
-    } else {
-      // HASH PASSWORD
-      const hashedPassword = await hashPassword(password);
-
-      // INSERT USER INTO DATABASE
-      const [result] = await pool.execute(
-        `INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)`,
-        [firstname, lastname, email, hashedPassword]
-      );
-
-      if (result.affectedRows === 0) {
-        return res.status(500).json({ message: "dbError" });
-      }
-
-      res.status(201).json({ message: "success" });
     }
+
+    // HASH PASSWORD
+    const hashedPassword = await hashPassword(password);
+
+    // INSERT USER INTO DATABASE
+    const [result] = await pool.execute(
+      `INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)`,
+      [firstname, lastname, email, hashedPassword]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(500).json({ message: "dbError" });
+    }
+
+    req.user = { userId: result.insertId };
+
+    next();
   } catch (error) {
     next(error);
   }

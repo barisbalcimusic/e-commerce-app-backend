@@ -7,11 +7,11 @@ const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
 export const authenticationMiddleware = async (req, res, next) => {
   try {
-    const token = req.cookies["accessToken"];
+    const token = req.cookies.accessToken;
 
     if (!token) {
       return res.status(401).json({
-        message: "missingCookie",
+        message: "missingAuthToken",
       });
     }
 
@@ -27,6 +27,7 @@ export const authenticationMiddleware = async (req, res, next) => {
         message: "tokenVerificationFailed",
       });
     }
+
     req.user = verification;
     next();
   } catch (err) {
