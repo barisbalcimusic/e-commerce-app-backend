@@ -60,7 +60,7 @@ export const postOrder = async (req, res, next) => {
       return res.status(400).json({ message: "addressNotCreated" });
     }
 
-    res.status(201).json({ message: "success" });
+    next();
   } catch (error) {
     next(error);
   }

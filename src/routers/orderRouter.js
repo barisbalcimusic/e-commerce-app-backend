@@ -3,6 +3,7 @@ import { postOrder } from "../controllers/orders/postOrder.js";
 import { getOrdersByUser } from "../controllers/orders/getOrdersByUser.js";
 import { getProductsByOrder } from "../controllers/orders/getProductsByOrder.js";
 import { authenticationMiddleware } from "../middlewares/authenticationMiddleware.js";
+import { emptyUserCart } from "../controllers/cart/emptyUserCart.js";
 
 export const orderRouter = express.Router();
 
@@ -13,4 +14,4 @@ orderRouter.route("/details").get(authenticationMiddleware, getProductsByOrder);
 orderRouter
   .route("/")
   .get(authenticationMiddleware, getOrdersByUser)
-  .post(authenticationMiddleware, postOrder);
+  .post(authenticationMiddleware, postOrder, emptyUserCart);
