@@ -2,7 +2,8 @@ import { pool } from "../../utils/config/DBconfig.js";
 
 export const postOrder = async (req, res, next) => {
   try {
-    const { userId, address, paymentMethod, cartItems, total } = req.body;
+    const { userId } = req.user;
+    const { address, paymentMethod, cartItems, total } = req.body;
 
     //! VALIDATE & SANITIZE INPUTS LATER
 
@@ -27,10 +28,10 @@ export const postOrder = async (req, res, next) => {
         "INSERT INTO order_items (order_id, product_id, size, quantity, price) VALUES (?, ?, ?, ?, ?)",
         [
           orderId,
-          cartItem.item.id,
+          cartItem.product.id,
           cartItem.size,
           cartItem.quantity,
-          cartItem.item.price,
+          cartItem.product.price,
         ]
       );
 
