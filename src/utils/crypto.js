@@ -1,17 +1,17 @@
 import bcrypt from "bcrypt";
 
-export const hashPassword = (password) => {
+export const hashFunc = (value) => {
   try {
-    return bcrypt.hash(password, 10);
+    return bcrypt.hash(value, 10);
   } catch (error) {
-    throw new Error("Error hashing the password");
+    throw new Error("hashingError");
   }
 };
 
-export const comparePasswords = (password, hashedPassword) => {
+export const compareFunc = (value, hashedValue) => {
   try {
-    return bcrypt.compare(password, hashedPassword);
+    return bcrypt.compare(value, hashedValue);
   } catch (error) {
-    throw new Error("Error comparing passwords");
+    throw new Error("hashCompareError");
   }
 };

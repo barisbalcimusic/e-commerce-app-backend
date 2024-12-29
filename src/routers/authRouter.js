@@ -5,6 +5,7 @@ import { logout } from "../controllers/user/logout.js";
 import { captchaMiddleware } from "../middlewares/captchaMiddleware.js";
 import { authenticationMiddleware } from "../middlewares/authenticationMiddleware.js";
 import { createUserCart } from "../controllers/cart/createUserCart.js";
+import { verifyUser } from "../controllers/user/verifyUser.js";
 
 export const authRouter = express.Router();
 
@@ -27,3 +28,6 @@ authRouter
   .get(authenticationMiddleware, async (req, res, next) => {
     res.status(200).json({ isValid: true });
   });
+
+// VERIFY USER
+authRouter.get("/verifyUser", verifyUser);

@@ -1,8 +1,14 @@
 import { pool } from "../../utils/config/DBconfig.js";
-import { hashPassword } from "../../utils/crypto.js";
+import { hashFunc } from "../../utils/crypto.js";
 import { sanitizeInput } from "../../utils/sanitizer.js";
 import validator from "validator";
 import { testPassword } from "../../utils/testPassword.js";
+import {
+  mailOptionsFunc,
+  transporterFunc,
+} from "../../utils/config/mailConfig.js";
+import { sendVerificationMail } from "../../utils/sendVerificationMail.js";
+import crypto from "crypto";
 
 export const register = async (req, res, next) => {
   try {
@@ -10,7 +16,7 @@ export const register = async (req, res, next) => {
 
     // CHECK IF REQUIRED FIELDS ARE EMPTY
     if (!firstname || !lastname || !email || !password) {
-      res.status(400).json({ message: "missingInput" });
+      return res.status(400).json({ message: "missingInput" });
     }
 
     // VALIDATE EMAIL
@@ -60,22 +66,57 @@ export const register = async (req, res, next) => {
     }
 
     // HASH PASSWORD
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashFunc(password);
+
+    //CREATE VERIFICATION TOKEN FOR EMAIL
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
+    // HASH VERIFICATION TOKEN
+    const hashedVerificationToken = await hashFunc(verificationToken);
 
     // INSERT USER INTO DATABASE
     const [result] = await pool.execute(
-      `INSERT INTO users (firstname, lastname, email, password) VALUES (?, ?, ?, ?)`,
-      [firstname, lastname, email, hashedPassword]
+      `INSERT INTO users (firstname, lastname, email, password, verification_token) VALUES (?, ?, ?, ?, ?)`,
+      [firstname, lastname, email, hashedPassword, hashedVerificationToken]
     );
 
     if (result.affectedRows === 0) {
-      return res.status(500).json({ message: "dbError" });
+      return res.status(500).json({ message: "userNotCreated" });
+    }
+
+    const deleteUser = async () => {
+      try {
+        await pool.query("DELETE FROM users WHERE id = ?", [result.insertId]);
+        await pool.query("DELETE FROM carts WHERE user_id = ?", [
+          result.insertId,
+        ]);
+      } catch (err) {
+        console.error("Error while deleting user or cart:", err);
+      }
+    };
+
+    //SEND VERIFICATION EMAIL
+    const transporter = transporterFunc();
+    const mailOptions = mailOptionsFunc(
+      email,
+      result.insertId,
+      verificationToken
+    );
+    const verificationMailSent = await sendVerificationMail(
+      transporter,
+      mailOptions
+    );
+
+    if (!verificationMailSent) {
+      await deleteUser();
+      return res.status(500).json({ message: "verificationMailNotSent" });
     }
 
     req.user = { userId: result.insertId };
 
     next();
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

@@ -1,6 +1,6 @@
 import { configDotenv } from "dotenv";
 import { pool } from "../../utils/config/DBconfig.js";
-import { comparePasswords } from "../../utils/crypto.js";
+import { compareFunc } from "../../utils/crypto.js";
 import { generateaccessToken } from "../../utils/jwt.js";
 
 configDotenv();
@@ -23,7 +23,7 @@ export const login = async (req, res, next) => {
       return res.status(404).json({ message: "userNotFound" });
     }
 
-    const isPasswordCorrect = await comparePasswords(password, user.password);
+    const isPasswordCorrect = await compareFunc(password, user.password);
 
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: "invalidCredentials" });
@@ -31,6 +31,10 @@ export const login = async (req, res, next) => {
 
     if (!accessTokenSecret) {
       return res.status(500).json({ message: "accessTokenSecretNotFound" });
+    }
+
+    if (user.is_verified === 0) {
+      return res.status(401).json({ message: "userNotVerified" });
     }
 
     const accessToken = generateaccessToken(
@@ -52,9 +56,7 @@ export const login = async (req, res, next) => {
       secure: true,
     });
 
-    res.status(200).json({
-      message: "success",
-    });
+    res.status(200).json({ message: "success" });
   } catch (error) {
     next(error);
   }
