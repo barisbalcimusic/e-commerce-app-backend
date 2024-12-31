@@ -60,7 +60,7 @@ export const register = async (req, res, next) => {
       });
     }
 
-    const [user] = await pool.execute("SELECT * FROM USERS WHERE email = ?", [
+    const [user] = await pool.execute("SELECT * FROM users WHERE email = ?", [
       email,
     ]);
 
