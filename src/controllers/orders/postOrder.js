@@ -1,4 +1,13 @@
 import { pool } from "../../utils/config/DBconfig.js";
+import {
+  mailOptionsFunc,
+  transporterFunc,
+} from "../../utils/config/mailConfig.js";
+import {
+  confirmationMailHTML,
+  confirmationMailSubject,
+} from "../../utils/mailData.js.js";
+import { sendMailFunc } from "../../utils/sendMailFunc.js";
 
 export const postOrder = async (req, res, next) => {
   try {
@@ -58,6 +67,26 @@ export const postOrder = async (req, res, next) => {
 
     if (addressResult.affectedRows === 0) {
       return res.status(400).json({ message: "addressNotCreated" });
+    }
+
+    // GET USER EMAIL
+    const [[{ email }]] = await pool.query(
+      "SELECT email FROM users WHERE id = ?",
+      [userId]
+    );
+
+    //SEND CONFIRMATION EMAIL
+    const transporter = transporterFunc();
+    const mailOptions = mailOptionsFunc(
+      email,
+      confirmationMailSubject,
+      confirmationMailHTML(cartItems, paymentMethod, address, total)
+    );
+    const confirmationMailSent = await sendMailFunc(transporter, mailOptions);
+
+    if (!confirmationMailSent) {
+      //! SHOULD I DELETE THE ORDER AND ORDER ITEMS NOW?
+      return res.status(500).json({ message: "confirmationMailNotSent" });
     }
 
     next();

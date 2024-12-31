@@ -7,8 +7,12 @@ import {
   mailOptionsFunc,
   transporterFunc,
 } from "../../utils/config/mailConfig.js";
-import { sendVerificationMail } from "../../utils/sendVerificationMail.js";
+import { sendMailFunc } from "../../utils/sendMailFunc.js";
 import crypto from "crypto";
+import {
+  verificationMailHTML,
+  verificationMailSubject,
+} from "../../utils/mailData.js.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -99,13 +103,10 @@ export const register = async (req, res, next) => {
     const transporter = transporterFunc();
     const mailOptions = mailOptionsFunc(
       email,
-      result.insertId,
-      verificationToken
+      verificationMailSubject,
+      verificationMailHTML(verificationToken, result.insertId)
     );
-    const verificationMailSent = await sendVerificationMail(
-      transporter,
-      mailOptions
-    );
+    const verificationMailSent = await sendMailFunc(transporter, mailOptions);
 
     if (!verificationMailSent) {
       await deleteUser();

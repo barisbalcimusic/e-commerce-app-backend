@@ -1,4 +1,4 @@
-export const sendVerificationMail = async (transporter, mailOptions) => {
+export const sendMailFunc = async (transporter, mailOptions) => {
   try {
     //SEND VERIFICATION MAIL
     await transporter.sendMail(mailOptions);
