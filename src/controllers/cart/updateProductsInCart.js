@@ -36,8 +36,6 @@ export const updateProductsInCart = async (req, res, next) => {
       ]);
     }
 
-    console.log("updateProductsInCart called");
-
     res.status(200).json({ message: "success" });
   } catch (error) {
     next(error);

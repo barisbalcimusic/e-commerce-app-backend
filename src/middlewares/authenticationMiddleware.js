@@ -27,7 +27,6 @@ export const authenticationMiddleware = async (req, res, next) => {
         message: "tokenVerificationFailed",
       });
     }
-
     req.user = verification;
     next();
   } catch (err) {

@@ -26,7 +26,7 @@ authRouter.route("/logout").post(authenticationMiddleware, logout);
 authRouter
   .route("/authentication")
   .get(authenticationMiddleware, async (req, res, next) => {
-    res.status(200).json({ isValid: true });
+    res.status(200).json({ userId: req.user.userId });
   });
 
 // VERIFY USER

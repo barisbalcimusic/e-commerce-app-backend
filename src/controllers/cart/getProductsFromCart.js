@@ -48,10 +48,6 @@ export const getProductsFromCart = async (req, res, next) => {
       quantity: item.cart_item_quantity,
     }));
 
-    console.log("getProductsFromCart called");
-
-    console.log(formattedCart);
-
     res.status(200).json(formattedCart);
   } catch (error) {
     next(error);
