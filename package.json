@@ -22,6 +22,8 @@
     "mysql2": "^3.11.3",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
+    "openai": "^4.82.0",
+    "pdf-parse": "^1.1.1",
     "sanitize-html": "^2.13.1",
     "sequelize": "^6.37.3",
     "validator": "^13.12.0"
