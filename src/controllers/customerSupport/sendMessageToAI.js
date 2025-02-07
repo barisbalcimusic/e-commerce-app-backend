@@ -1,11 +1,26 @@
 import dotenv from "dotenv";
 import fs from "fs";
 import OpenAI from "openai";
+import sanitizeHtml from "sanitize-html";
 
 dotenv.config();
 
 export const sendMessageToAI = async (req, res, next) => {
-  const { message } = req.body;
+  const userMessage = req.body.content;
+
+  if (!userMessage) {
+    return res.status(400).json({ message: "User message is required." });
+  }
+
+  //SANITIZE MESSAGE
+  let sanitizedMessage = sanitizeHtml(userMessage, {
+    allowedTags: [],
+    allowedAttributes: {},
+  });
+
+  if (!sanitizedMessage) {
+    return res.status(400).json({ message: "Invalid message." });
+  }
 
   const GTC = fs.readFileSync("src/data/GTC.txt", "utf-8");
 
@@ -19,16 +34,18 @@ export const sendMessageToAI = async (req, res, next) => {
     const completion = await openai.chat.completions.create({
       messages: [
         { role: "system", content: systemPrompt },
-        { role: "user", content: message },
+        { role: "user", content: userMessage },
       ],
       model: "gpt-3.5-turbo",
       max_tokens: 20,
     });
-
     const answerFromAI = completion.choices[0].message.content;
-    console.log(answerFromAI);
+    res.status(200).json({ content: answerFromAI, role: "AI" });
 
-    res.status(200).json({ answer: answerFromAI });
+    console.log({ content: answerFromAI, role: "AI" });
+    // //! ONLY FOR TESTING PURPOSES
+    // console.log({ content: "Test: I got your message", role: "AI" });
+    // res.status(200).json({ content: "Test: I got your message", role: "AI" });
   } catch (error) {
     next(error);
   }
