@@ -8,6 +8,8 @@ dotenv.config();
 export const sendMessageToAI = async (req, res, next) => {
   const userMessage = req.body.content;
 
+  console.log("test");
+
   if (!userMessage) {
     return res.status(400).json({ message: "User message is required." });
   }
@@ -24,7 +26,7 @@ export const sendMessageToAI = async (req, res, next) => {
 
   const GTC = fs.readFileSync("src/data/GTC.txt", "utf-8");
 
-  const systemPrompt = `Answer the user's question based only on the following text content:\n\n${GTC}\n\nIf the question is not related to this content, respond with "I have no information on this topic."`;
+  const systemPrompt = `Beantworte die Frage des Nutzers basierend auf folgendem Text:\n\n${GTC}\n\nFalls die Frage nicht dazu gehört, antworte mit: "Ich kann bei diesem Thema nicht weiterhelfen. Kann ich bei etwas anderem helfen?". Andernfalls halte deine Antwort kurz.`;
 
   //OPENAI AUTHORIZATION
   const openai = new OpenAI({ OPENAI_API_KEY: process.env.OPENAI_API_KEY });
@@ -37,12 +39,10 @@ export const sendMessageToAI = async (req, res, next) => {
         { role: "user", content: userMessage },
       ],
       model: "gpt-3.5-turbo",
-      max_tokens: 20,
     });
     const answerFromAI = completion.choices[0].message.content;
     res.status(200).json({ content: answerFromAI, role: "AI" });
 
-    console.log({ content: answerFromAI, role: "AI" });
     // //! ONLY FOR TESTING PURPOSES
     // console.log({ content: "Test: I got your message", role: "AI" });
     // res.status(200).json({ content: "Test: I got your message", role: "AI" });
