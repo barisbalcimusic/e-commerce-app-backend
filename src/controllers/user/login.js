@@ -52,7 +52,6 @@ export const login = async (req, res, next) => {
       maxAge: 3600000,
       httpOnly: true,
       sameSite: "None",
-      //! ONLY FOR TESTING
       secure: true,
     });
 
